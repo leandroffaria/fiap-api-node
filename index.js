@@ -1,32 +1,57 @@
 const express = require('express');
 
-// FIREBASE
-const firebase = require('firebase');
-const firebaseConfig = require('./config/firebase');
-
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-
-const db = firebaseApp.firestore();
-
-
-
-
-
-
-
-
-
-// JWT
+const routes = require('./routes');
 const bodyParser = require('body-parser');
 
-const createToken = require('./utils/createToken');
-const verifyToken = require('./middlewares/verifyToken');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(routes);
 
-app.post('/auth', (request, response, next) => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+// FIREBASE
+const firebase = require('firebase');
+const firebaseConfig = require('./config/firebase');
+
+// const firebaseApp = firebase.initializeApp(firebaseConfig);
+
+// const db = firebaseApp.firestore();
+
+
+const createToken = require('./utils/createToken');
+const verifyToken = require('./middlewares/verifyToken');
+
+app.post('/auth', (request, response) => {
     const { email, password } = request.body;
 
     db.collection('users')
@@ -54,28 +79,7 @@ app.post('/auth', (request, response, next) => {
         });
 });
 
-app.get('/users/:id', verifyToken, (request, response) => {
-    const id = request.params.id;
-    
-    db.collection('users').doc(id).get()
-        .then(user => {
-            if(!user.exists) {
-                response
-                    .sendStatus(404);
-                    //.send({ message: 'No Content' });
-            }
-
-            response.json(user.data());
-        })
-        .catch(err => {
-            response
-                .sendStatus(500);
-            console.log(err);
-            console.log('Error getting document', err);
-        });
-});
-
-app.get('/users', (request, response, next) => {
+app.get('/users', (request, response) => {
     db.collection('users').get()
         .then(users => response.json(
             users.docs.map(user => ({
@@ -91,25 +95,4 @@ app.get('/users', (request, response, next) => {
         });
 });
 
-
-
-app.get('/nome-da-sua-rota/:id', (request, response) => {
-    const { id } = request.params;
-
-    /* Aqui dependendo da situação poderia ter
-    * - request.body
-    * - request.query
-    */
-
-    // seu código usando este parâmetro id
-
-    response.status(200).send({ /* resposta do seu endpoint */ });
-});
-
-
-
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
-});
+*/
